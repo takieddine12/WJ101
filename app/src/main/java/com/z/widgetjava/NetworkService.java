@@ -31,11 +31,12 @@ public class NetworkService extends android.app.Service {
             public void onDataConnectionStateChanged(int state, int networkType) {
                 String networkTypeString = getNetworkType(networkType);
                 showNetworkChangeNotification(networkTypeString);
-                if(getNetworkType(networkType).equals("5G")){
+                if(networkTypeString.equals("5G")){
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             notificationManager.cancel(1);
+                            stopSelf();
                         }
                     }, 15000);
                 }
