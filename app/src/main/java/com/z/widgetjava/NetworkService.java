@@ -31,6 +31,14 @@ public class NetworkService extends android.app.Service {
             public void onDataConnectionStateChanged(int state, int networkType) {
                 String networkTypeString = getNetworkType(networkType);
                 showNetworkChangeNotification(networkTypeString);
+                if(getNetworkType(networkType).equals("5G")){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            notificationManager.cancel(1);
+                        }
+                    }, 15000);
+                }
             }
         };
 
@@ -95,17 +103,8 @@ public class NetworkService extends android.app.Service {
             notificationManager.notify(1, notificationBuilder.build());
         }
 
-        Log.d("TAG", "Current Rsrp " + getRsrpValues());
 
-        if (getRsrpValues() >= -100 && getRsrpValues() <= -120) {
-            Log.d("TAG", "RSRP " + getRsrpValues());
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    notificationManager.cancel(1);
-                }
-            }, 15000);
-        }
+
     }
 
     private PendingIntent getCancelPendingIntent() {

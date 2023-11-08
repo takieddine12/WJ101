@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private TelephonyManager telephonyManager;
-    private NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
+    private final NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
