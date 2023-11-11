@@ -6,6 +6,7 @@
     android:background="@color/black">
 
     <TextView
+        android:id="@+id/text"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

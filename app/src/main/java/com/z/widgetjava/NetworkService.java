@@ -89,6 +89,9 @@ public class NetworkService extends android.app.Service {
         }
 
         RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.custom_ui_layout);
+        remoteViews.setTextViewText(R.id.text,"This is a testing text");
+
+        
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
