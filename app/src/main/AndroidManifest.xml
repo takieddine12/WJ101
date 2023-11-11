@@ -20,23 +20,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WidgetJava"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service android:name=".NetworkService"/>
         <receiver android:name=".NetworkChangeReceiver"
             android:exported="true"
-            android:permission="TODO">
+            android:permission="TODO"
+            tools:ignore="ExportedReceiver">
             <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
                 <action android:name="com.z.widgets.networkChangeReceiver.actionCancelNotification"/>
             </intent-filter>
         </receiver>
+
+
     </application>
 
 </manifest>

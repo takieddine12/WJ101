@@ -13,6 +13,7 @@ import android.telephony.CellInfoLte;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
@@ -87,6 +88,7 @@ public class NetworkService extends android.app.Service {
             notificationManager.createNotificationChannel(channel);
         }
 
+        RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.custom_ui_layout);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
@@ -95,6 +97,7 @@ public class NetworkService extends android.app.Service {
                 .setContentText("Network Type: " + networkType)
                 .setSmallIcon(R.drawable.baseline_circle_notifications_24)
                 .setContentIntent(pendingIntent)
+                .setContent(remoteViews)
                 .addAction(R.drawable.baseline_circle_notifications_24, "Reset", getCancelPendingIntent())
                 .setAutoCancel(true);
 
