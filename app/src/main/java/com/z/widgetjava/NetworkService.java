@@ -1,6 +1,7 @@
 package com.z.widgetjava;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -39,6 +40,8 @@ public class NetworkService extends android.app.Service {
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("network_change_channel", "Network Change Channel", NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+
             notificationManager.createNotificationChannel(channel);
         }
 
@@ -54,7 +57,10 @@ public class NetworkService extends android.app.Service {
                 .setContentText("Showing simple notification")
                 .setSmallIcon(R.drawable.baseline_circle_notifications_24)
                 .setContentIntent(pendingIntent)
-                .setContent(remoteViews)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOngoing(true)
+              //  .setContent(remoteViews)
                 .addAction(R.drawable.baseline_circle_notifications_24, "Reset", getCancelPendingIntent())
                 .setAutoCancel(true);
 
