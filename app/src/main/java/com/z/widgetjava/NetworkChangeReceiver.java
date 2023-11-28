@@ -6,18 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.telephony.TelephonyManager;
+import android.widget.Toast;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
-    private TelephonyManager telephonyManager;
+
 
     @SuppressLint("MissingPermission")
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent serviceIntent = new Intent(context, NetworkService.class);
         if (intent != null && "com.z.widgets.networkChangeReceiver.actionCancelNotification".equals(intent.getAction())) {
-            if (context != null) {
-                context.stopService(serviceIntent);
-            }
+            Toast.makeText(context,"Reset Button Clicked",Toast.LENGTH_LONG).show();
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (context != null) {

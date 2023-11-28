@@ -19,32 +19,13 @@ import androidx.core.app.NotificationCompat;
 
 public class NetworkService extends android.app.Service {
 
-    private TelephonyManager telephonyManager;
     private NotificationManager notificationManager;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-
-        PhoneStateListener phoneStateListener = new PhoneStateListener() {
-            @Override
-            public void onDataConnectionStateChanged(int state, int networkType) {
-                String networkTypeString = getNetworkType(networkType);
-                showNetworkChangeNotification(networkTypeString);
-                if(networkTypeString.equals("5G")){
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            notificationManager.cancel(1);
-                            stopSelf();
-                        }
-                    }, 15000);
-                }
-            }
-        };
-
-        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
+        showNetworkChangeNotification();
     }
 
     @Override
@@ -52,36 +33,9 @@ public class NetworkService extends android.app.Service {
         return null;
     }
 
-    private String getNetworkType(int networkType) {
-        switch (networkType) {
-            case TelephonyManager.NETWORK_TYPE_GPRS:
-            case TelephonyManager.NETWORK_TYPE_EDGE:
-            case TelephonyManager.NETWORK_TYPE_CDMA:
-            case TelephonyManager.NETWORK_TYPE_1xRTT:
-            case TelephonyManager.NETWORK_TYPE_IDEN:
-            case TelephonyManager.NETWORK_TYPE_GSM:
-                return "2G";
-            case TelephonyManager.NETWORK_TYPE_UMTS:
-            case TelephonyManager.NETWORK_TYPE_EVDO_0:
-            case TelephonyManager.NETWORK_TYPE_EVDO_A:
-            case TelephonyManager.NETWORK_TYPE_HSDPA:
-            case TelephonyManager.NETWORK_TYPE_HSUPA:
-            case TelephonyManager.NETWORK_TYPE_HSPA:
-            case TelephonyManager.NETWORK_TYPE_EVDO_B:
-            case TelephonyManager.NETWORK_TYPE_EHRPD:
-            case TelephonyManager.NETWORK_TYPE_HSPAP:
-            case TelephonyManager.NETWORK_TYPE_TD_SCDMA:
-                return "3G";
-            case TelephonyManager.NETWORK_TYPE_LTE:
-                return "4G";
-            case TelephonyManager.NETWORK_TYPE_NR:
-                return "5G";
-            default:
-                return "Unknown";
-        }
-    }
 
-    private void showNetworkChangeNotification(String networkType) {
+    private void showNetworkChangeNotification() {
+
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("network_change_channel", "Network Change Channel", NotificationManager.IMPORTANCE_DEFAULT);
@@ -95,9 +49,9 @@ public class NetworkService extends android.app.Service {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "network_change_channel")
-                .setContentTitle("Network Changed")
-                .setContentText("Network Type: " + networkType)
+        @SuppressLint("NotificationTrampoline") NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "network_change_channel")
+                .setContentTitle("Notification")
+                .setContentText("Showing simple notification")
                 .setSmallIcon(R.drawable.baseline_circle_notifications_24)
                 .setContentIntent(pendingIntent)
                 .setContent(remoteViews)
@@ -120,16 +74,6 @@ public class NetworkService extends android.app.Service {
         return PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
     }
 
-    @SuppressLint({"MissingPermission", "NewApi"})
-    private int getRsrpValues() {
-        int rsrp = 0;
-        for (CellInfo cellInfo : telephonyManager.getAllCellInfo()) {
-            if (cellInfo instanceof CellInfoLte) {
-                rsrp = ((CellInfoLte) cellInfo).getCellSignalStrength().getRsrp();
-            }
-        }
-        return rsrp;
-    }
 
     @Override
     public void onDestroy() {
